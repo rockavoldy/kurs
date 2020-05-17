@@ -1,0 +1,30 @@
+name: generate json from php
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 12 * * 3"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+      - name: Build
+        run: |
+          mkdir dist 
+          php kurs.php
+          mv kurs.json dist
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist

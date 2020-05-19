@@ -33,6 +33,15 @@ function getDom()
 
     $dom = new DOMDocument;
     $dom->loadHTML($content);
+    return $dom;
+
+}
+
+function getDataKurs()
+{
+    if (!$dom = getDom()) {
+        return false;
+    }
 
     $rows = array();
 
@@ -59,12 +68,34 @@ function getDom()
     return $rows;
 }
 
+function getTanggalBerlaku()
+{
+    if (!$dom = getDom()) {
+        return false;
+    }
+
+    return explode(" - ", substr(trim($dom->getElementsByTagName('p')[1]->nodeValue), 17));
+}
+
 function generateJson()
 {
     $fp = fopen('kurs.json', 'w');
-    fwrite($fp, json_encode(getDom()));
+    $data = array(
+        'tanggal_generate' => date('Y-m-d H:i:s'),
+        'berlaku_mulai' => date_format(date_create(getTanggalBerlaku()[0]), "Y-m-d"),
+        'berlaku_sampai' => date_format(date_create(getTanggalBerlaku()[1]), "Y-m-d"),
+        'data' => getDataKurs()
+    );
+
+    fwrite($fp, json_encode($data));
     fclose($fp);
 }
 
-generateJson();
+
+function main()
+{
+    generateJson();
+}
+
+main();
 ?>

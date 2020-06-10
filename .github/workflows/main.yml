@@ -19,7 +19,7 @@ jobs:
           php-version: "7.4"
       - name: Build
         run: |
-          mkdir dist 
+          mkdir -p dist 
           php kurs.php
           mv kurs.json dist
       - name: Deploy

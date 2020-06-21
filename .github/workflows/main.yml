@@ -19,9 +19,9 @@ jobs:
           php-version: "7.4"
       - name: Build
         run: |
-          mkdir -p dist 
+          mkdir -p dist/api/ 
           php kurs.php
-          mv kurs.json dist
+          mv kurs.json dist/api/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

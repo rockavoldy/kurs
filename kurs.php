@@ -81,22 +81,27 @@ function getTanggalBerlaku()
 
 function generateJson()
 {
-    $fp = fopen('kurs.json', 'w');
+    $berlaku_mulai = date_create(getTanggalBerlaku()[0]);
+    $berlaku_sampai = date_create(getTanggalBerlaku()[1]);
+    $nama = "kurs-" . date_format($berlaku_mulai, "dmy") . ".json";
+    $fp = fopen($nama, 'w');
     $data = array(
         'tanggal_generate' => date('Y-m-d H:i:s'),
-        'berlaku_mulai' => date_format(date_create(getTanggalBerlaku()[0]), "Y-m-d"),
-        'berlaku_sampai' => date_format(date_create(getTanggalBerlaku()[1]), "Y-m-d"),
+        'berlaku_mulai' => date_format($berlaku_mulai, "Y-m-d"),
+        'berlaku_sampai' => date_format($berlaku_sampai, "Y-m-d"),
         'data' => getDataKurs()
     );
 
     fwrite($fp, json_encode($data));
     fclose($fp);
+
+    return $nama;
 }
 
 
 function main()
 {
-    generateJson();
+    echo generateJson();
 }
 
 main();

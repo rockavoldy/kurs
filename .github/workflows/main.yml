@@ -19,9 +19,11 @@ jobs:
           php-version: "7.4"
       - name: Build
         run: |
-          mkdir -p dist/api/ 
-          php kurs.php
-          mv kurs.json dist/api/
+          mkdir -p dist/api/kurs/
+          fpname=$(php kurs.json)
+          mv $fpname dist/api/kurs/
+          cd dist/api/kurs/
+          cp $fpname ../kurs.json
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

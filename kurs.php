@@ -4,7 +4,7 @@ error_reporting(0);
 
 function getCurl()
 {
-    $url = "https://fiskal.kemenkeu.go.id/dw-kurs-db.asp";
+    $url = "https://fiskal.kemenkeu.go.id/informasi-publik/kurs-pajak";
     $ua = "Googlebot/2.1 (http://www.googlebot.com/bot.html)";
     $ch = curl_init();
 
@@ -34,7 +34,6 @@ function getDom()
     $dom = new DOMDocument;
     $dom->loadHTML($content);
     return $dom;
-
 }
 
 function getDataKurs()
@@ -46,25 +45,28 @@ function getDataKurs()
     $rows = array();
 
     $table = $dom->getElementsByTagName('table')[0];
-    // print_r($tbody);
 
     foreach ($table->getElementsByTagName('tr') as $tr) {
         $cells = array();
         $i = 0;
+
         foreach ($tr->getElementsByTagName('td') as $r) {
             if ($i == 1) {
-                $cells['mata_uang'] = $r->nodeValue;
-                $cells['simbol'] = substr($r->nodeValue, -4, 3);
+                $cells['mata_uang'] = trim($r->nodeValue);
+                $cells['simbol'] = trim(substr($r->nodeValue, -4, 3));
             } else if ($i == 2) {
-                $cells['nilai'] = $r->nodeValue;
+                $cells['nilai'] = trim($r->nodeValue);
             } else if ($i == 3) {
-                $cells['perubahan'] = $r->nodeValue;
+                $cells['perubahan'] = trim($r->nodeValue);
             }
             $i++;
         }
-        $rows[] = $cells;
-    }		
-        
+
+        if ($cells['simbol'] != null) {
+            $rows[] = $cells;
+        }
+    }
+
     return $rows;
 }
 
@@ -98,4 +100,3 @@ function main()
 }
 
 main();
-?>

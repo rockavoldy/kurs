@@ -3,7 +3,7 @@ name: generate json from php
 on:
   push:
     branches:
-      - master
+      - generate
   schedule:
     - cron: "0 0 * * 3"
 
@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: generate
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
